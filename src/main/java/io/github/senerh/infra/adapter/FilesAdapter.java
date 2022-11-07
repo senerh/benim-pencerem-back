@@ -1,11 +1,13 @@
 package io.github.senerh.infra.adapter;
 
 import com.google.api.services.drive.model.FileList;
+import io.github.senerh.domain.model.File;
 import io.github.senerh.domain.model.Files;
 import io.github.senerh.domain.model.FindFilesQuery;
 import io.github.senerh.domain.port.FilesPort;
 import io.github.senerh.infra.exception.GoogleDriveException;
 import io.github.senerh.infra.mapper.FileListMapper;
+import io.github.senerh.infra.mapper.FileMapper;
 import io.github.senerh.infra.util.DriveHelper;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,7 +19,10 @@ import java.util.stream.Collectors;
 public class FilesAdapter implements FilesPort {
 
     @Inject
-    FileListMapper filesMapper;
+    FileListMapper fileListMapper;
+
+    @Inject
+    FileMapper fileMapper;
 
     @Override
     public Files findFiles(FindFilesQuery query) {
@@ -31,7 +36,21 @@ public class FilesAdapter implements FilesPort {
                     .setOrderBy(buildOrderBy(query))
                     .setPageToken(query.getPageToken())
                     .execute();
-            return filesMapper.toDomain(fileList);
+            return fileListMapper.toDomain(fileList);
+        } catch (IOException e) {
+            throw new GoogleDriveException("Querying Google Drive API throws an exception", e);
+        }
+    }
+
+    @Override
+    public File findFile(String fileId) {
+        try {
+            var file = DriveHelper.getInstance()
+                    .files()
+                    .get(fileId)
+                    .setFields("id, name, mimeType, description, thumbnailLink, webContentLink, webViewLink, createdTime")
+                    .execute();
+            return fileMapper.toDomain(file);
         } catch (IOException e) {
             throw new GoogleDriveException("Querying Google Drive API throws an exception", e);
         }

@@ -1,13 +1,11 @@
 package io.github.senerh.ui.resource;
 
+import io.github.senerh.ui.dto.FileDto;
 import io.github.senerh.ui.dto.FilesDto;
 import io.github.senerh.ui.service.FilesDtoService;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/files")
@@ -20,5 +18,11 @@ public class FileResource {
     @GET
     public FilesDto getFilesDto(@QueryParam("q") String query, @QueryParam("pageToken") String pageToken) {
         return filesDtoService.findFileDtos(query, pageToken);
+    }
+
+    @Path("/{fileId}")
+    @GET
+    public FileDto getFileDto(@PathParam("fileId") String fileId) {
+        return filesDtoService.findFileDto(fileId);
     }
 }
