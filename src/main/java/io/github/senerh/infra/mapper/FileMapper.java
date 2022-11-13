@@ -38,14 +38,14 @@ public class FileMapper {
         if (files == null) {
             return List.of();
         }
-        return files.stream().filter(Objects::nonNull).map(this::toDomain).collect(Collectors.toList());
+        return files.stream().filter(Objects::nonNull).map(this::toDomain).toList();
     }
 
     private List<String> findTags(String description) {
         if (description == null) {
             return List.of();
         }
-        Pattern pattern = Pattern.compile("#{1}([^\\s.#]+)");
+        Pattern pattern = Pattern.compile("(#[^\\s.#]+)");
         Matcher matcher = pattern.matcher(description);
         List<String> tags = new ArrayList<>();
         while (matcher.find()) {
