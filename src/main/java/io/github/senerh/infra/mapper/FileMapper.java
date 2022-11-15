@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class FileMapper {
@@ -21,6 +20,7 @@ public class FileMapper {
         if (file == null) {
             return null;
         }
+        String largeThumbnailLink = file.getThumbnailLink() == null ? null : file.getThumbnailLink().replaceAll("=s\\d+", "");
         return new File(
                 file.getId(),
                 file.getName(),
@@ -28,6 +28,7 @@ public class FileMapper {
                 buildDescription(file.getDescription()),
                 findTags(file.getDescription()),
                 file.getThumbnailLink(),
+                largeThumbnailLink,
                 file.getWebContentLink(),
                 file.getWebViewLink(),
                 mapDateTimeToDomain(file.getCreatedTime())

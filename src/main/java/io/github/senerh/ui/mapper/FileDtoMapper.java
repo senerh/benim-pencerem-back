@@ -17,7 +17,8 @@ public class FileDtoMapper {
                 file.getMimeType(),
                 file.getDescription(),
                 file.getTags(),
-                file.getThumbnailLink(),
+                file.getSmallThumbnailLink(),
+                file.getLargeThumbnailLink(),
                 file.getDownloadLink(),
                 file.getPreviewLink(),
                 file.getCreationDate()
@@ -25,6 +26,6 @@ public class FileDtoMapper {
     }
 
     public List<FileDto> toDtos(List<File> files) {
-        return files.stream().map(this::toDto).collect(Collectors.toList());
+        return files.stream().map(this::toDto).toList();
     }
 }
